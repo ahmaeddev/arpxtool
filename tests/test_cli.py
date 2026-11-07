@@ -10,7 +10,7 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TOOL = os.path.join(ROOT, "arpxtool_pro.py")
+TOOL = os.path.join(ROOT, "arpxtool.py")
 PROBE = os.path.join(ROOT, "verify_flutter_engines.py")
 
 FAILS = []

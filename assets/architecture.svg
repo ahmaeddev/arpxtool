@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="780" viewBox="0 0 1280 780" role="img" aria-label="ARPXTOOL pipeline">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient><linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="18"/></filter></defs><rect width="1280" height="780" fill="#0b1017"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6b7f93"/></marker></defs>
+<text x="60" y="60" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="22" fill="#c9d6e2" font-weight="700" text-anchor="start" >pipeline</text>
+<text x="60" y="84" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" >every stage writes into the archive that gets signed — never into a tree that may be discarded</text>
+<rect x="60" y="120" width="260" height="96" rx="12" fill="#111a24" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="60" y="130" width="4" height="76" rx="2" fill="#22d3ee"/>
+<text x="78" y="148" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >1 · INTAKE</text>
+<text x="78" y="172" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >merge .apks/.xapk</text>
+<text x="78" y="190" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >zip audit, entry list</text>
+<text x="78" y="208" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >input hash</text>
+<rect x="360" y="120" width="260" height="96" rx="12" fill="#111a24" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="360" y="130" width="4" height="76" rx="2" fill="#22d3ee"/>
+<text x="378" y="148" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >2 · DECODE</text>
+<text x="378" y="172" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >apktool 2.12.1</text>
+<text x="378" y="190" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >class loss counted</text>
+<text x="378" y="208" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >-&gt; surgery if any</text>
+<rect x="660" y="120" width="260" height="96" rx="12" fill="#111a24" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="660" y="130" width="4" height="76" rx="2" fill="#22d3ee"/>
+<text x="678" y="148" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >3 · ANALYSE</text>
+<text x="678" y="172" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >manifest · netsec</text>
+<text x="678" y="190" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >native surface</text>
+<text x="678" y="208" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >frameworks · hardening</text>
+<rect x="960" y="120" width="260" height="96" rx="12" fill="#111a24" stroke="#a78bfa" stroke-width="1.5"/>
+<rect x="960" y="130" width="4" height="76" rx="2" fill="#a78bfa"/>
+<text x="978" y="148" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#a78bfa" font-weight="700" text-anchor="start" >4 · PLAN</text>
+<text x="978" y="172" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >mode -&gt; stages</text>
+<text x="978" y="190" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >targets collected</text>
+<text x="978" y="208" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >guards armed</text>
+<rect x="60" y="280" width="300" height="120" rx="12" fill="#111a24" stroke="#34d399" stroke-width="1.5"/>
+<rect x="60" y="290" width="4" height="100" rx="2" fill="#34d399"/>
+<text x="78" y="308" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#34d399" font-weight="700" text-anchor="start" >5a · DEX SURGERY</text>
+<text x="78" y="332" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >length invariant</text>
+<text x="78" y="350" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >stub by return type</text>
+<text x="78" y="368" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >structural audit</text>
+<rect x="390" y="280" width="260" height="120" rx="12" fill="#111a24" stroke="#34d399" stroke-width="1.5"/>
+<rect x="390" y="290" width="4" height="100" rx="2" fill="#34d399"/>
+<text x="408" y="308" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#34d399" font-weight="700" text-anchor="start" >5b · MANIFEST</text>
+<text x="408" y="332" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >flags set</text>
+<text x="408" y="350" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >netsec reference</text>
+<text x="408" y="368" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >prune orphans</text>
+<rect x="680" y="280" width="260" height="120" rx="12" fill="#111a24" stroke="#34d399" stroke-width="1.5"/>
+<rect x="680" y="290" width="4" height="100" rx="2" fill="#34d399"/>
+<text x="698" y="308" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#34d399" font-weight="700" text-anchor="start" >5c · NETSEC</text>
+<text x="698" y="332" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >clone &lt;certificates&gt;</text>
+<text x="698" y="350" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >+ user · overridePins</text>
+<text x="698" y="368" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >pin-set removed</text>
+<rect x="970" y="280" width="250" height="120" rx="12" fill="#111a24" stroke="#34d399" stroke-width="1.5"/>
+<rect x="970" y="290" width="4" height="100" rx="2" fill="#34d399"/>
+<text x="988" y="308" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#34d399" font-weight="700" text-anchor="start" >5d · NATIVE</text>
+<text x="988" y="332" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >signature table</text>
+<text x="988" y="350" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >or symbol table</text>
+<text x="988" y="368" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >or prebuilt engine</text>
+<rect x="300" y="460" width="300" height="110" rx="12" fill="#111a24" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="300" y="470" width="4" height="90" rx="2" fill="#22d3ee"/>
+<text x="318" y="488" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >6 · REBUILD</text>
+<text x="318" y="512" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >tree build when clean</text>
+<text x="318" y="530" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >surgery when classes lost</text>
+<text x="318" y="548" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >in-archive re-apply</text>
+<rect x="680" y="460" width="300" height="110" rx="12" fill="#111a24" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="680" y="470" width="4" height="90" rx="2" fill="#22d3ee"/>
+<text x="698" y="488" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >7 · SIGN</text>
+<text x="698" y="512" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >zipalign 4-byte</text>
+<text x="698" y="530" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >apksigner v1/v2/v3</text>
+<text x="698" y="548" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >cross-device safe move</text>
+<rect x="480" y="620" width="340" height="110" rx="12" fill="#111a24" stroke="#fbbf24" stroke-width="1.5"/>
+<rect x="480" y="630" width="4" height="90" rx="2" fill="#fbbf24"/>
+<text x="498" y="648" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#fbbf24" font-weight="700" text-anchor="start" >8 · VERIFY</text>
+<text x="498" y="672" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >archive · schemes</text>
+<text x="498" y="690" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >patch sites confirmed</text>
+<text x="498" y="708" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >install diagnosis</text>
+<path d="M320 168 L356 168" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M620 168 L656 168" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M920 168 L956 168" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M1090 216 L1090 276" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M210 216 L210 276" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M520 216 L520 276" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M810 216 L810 276" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M210 400 L400 456" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M520 400 L500 456" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M810 400 L760 456" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M1090 400 L900 456" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<path d="M600 570 L620 616" stroke="#1e2b39" stroke-width="2" marker-end="url(#a)"/>
+<text x="60" y="748" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >a stage that cannot verify its own result prints nothing — the tool never fakes a success line</text>
+</svg>

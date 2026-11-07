@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="330" viewBox="0 0 1280 330" role="img" aria-label="ARPXTOOL banner">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient><linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="18"/></filter></defs><rect width="1280" height="330" fill="#0b1017"/>
+<ellipse cx="240" cy="40" rx="320" ry="150" fill="#22d3ee" opacity="0.16" filter="url(#soft)"/>
+<ellipse cx="1060" cy="300" rx="300" ry="140" fill="#a78bfa" opacity="0.16" filter="url(#soft)"/>
+<text x="72" y="108" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="62" fill="url(#g)" font-weight="700" text-anchor="start" letter-spacing="2">ARPXTOOL</text>
+<text x="74" y="152" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="20" fill="#6b7f93" font-weight="400" text-anchor="start" >android reverse-engineering toolkit for termux</text>
+<rect x="74" y="176" width="196" height="30" rx="15" fill="#22d3ee" opacity="0.16"/>
+<text x="94" y="196" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#22d3ee" font-weight="600" text-anchor="start" >v55.0 · GATEKEEPER</text>
+<rect x="284" y="176" width="150" height="30" rx="15" fill="#34d399" opacity="0.16"/>
+<text x="304" y="196" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="600" text-anchor="start" >no root · no frida</text>
+<text x="74" y="268" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="30" fill="#c9d6e2" font-weight="700" text-anchor="start" >36/36</text>
+<text x="74" y="292" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >flutter engines</text>
+<text x="274" y="268" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="30" fill="#c9d6e2" font-weight="700" text-anchor="start" >34/34</text>
+<text x="274" y="292" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >self checks</text>
+<text x="474" y="268" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="30" fill="#c9d6e2" font-weight="700" text-anchor="start" >4</text>
+<text x="474" y="292" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >patch layers</text>
+<text x="674" y="268" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="30" fill="#c9d6e2" font-weight="700" text-anchor="start" >620s</text>
+<text x="674" y="292" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#6b7f93" font-weight="400" text-anchor="start" >real build</text>
+<line x1="74" y1="228" x2="1206" y2="228" stroke="#1e2b39"/>
+</svg>

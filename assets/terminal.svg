@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="700" viewBox="0 0 1180 700" role="img" aria-label="terminal output">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient><linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="18"/></filter></defs><rect width="1180" height="700" fill="#0b1017"/>
+<rect x="40" y="36" width="1100" height="620" rx="12" fill="#0a0e14" stroke="#1e2b39"/>
+<rect x="40" y="36" width="1100" height="34" rx="12" fill="#111a24"/>
+<circle cx="66" cy="53" r="6" fill="#f87171"/>
+<circle cx="86" cy="53" r="6" fill="#fbbf24"/>
+<circle cx="106" cy="53" r="6" fill="#34d399"/>
+<text x="160" y="58" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" >arpxtool -i My Ooredoo_1.5.19.apks -m ssl</text>
+<text x="80" y="110" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#c9d6e2" font-weight="700" text-anchor="start" >  ARPXTOOL   v55.0   GATEKEEPER</text>
+<text x="80" y="136" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" ></text>
+<text x="80" y="162" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#22d3ee" font-weight="700" text-anchor="start" >  13 · BINARY PATCH</text>
+<text x="80" y="188" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] lib/armeabi-v7a/libflutter.so · 1 site(s) neutralised</text>
+<text x="80" y="214" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#c9d6e2" font-weight="400" text-anchor="start" >  [**] ssl_verify_peer_cert @0x5283e8 · returns 0</text>
+<text x="80" y="240" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" ></text>
+<text x="80" y="266" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#22d3ee" font-weight="700" text-anchor="start" >  18 · SURGICAL ENGINE</text>
+<text x="80" y="292" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] 29 method(s) rewritten across 3 dex file(s)</text>
+<text x="80" y="318" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] network security config rewritten · 560 -&gt; 616 byte(s) · user CA added</text>
+<text x="80" y="344" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] lib/armeabi-v7a/libflutter.so · ssl_verify_peer_cert @0x5283e8 · returns 0</text>
+<text x="80" y="370" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] 8 dex file(s) pass the structural audit</text>
+<text x="80" y="396" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" ></text>
+<text x="80" y="422" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#22d3ee" font-weight="700" text-anchor="start" >  20 · VERIFICATION</text>
+<text x="80" y="448" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] archive intact</text>
+<text x="80" y="474" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] signature verified · v2 v3</text>
+<text x="80" y="500" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#34d399" font-weight="400" text-anchor="start" >  [ok] binary patches confirmed in archive</text>
+<text x="80" y="526" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" ></text>
+<text x="80" y="552" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#c9d6e2" font-weight="700" text-anchor="start" >  STAGE TIMINGS   total 620.06s</text>
+<text x="80" y="578" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" fill="#6b7f93" font-weight="400" text-anchor="start" >  INTAKE 93.54s · DECODE 101.40s · MANIFEST 7.11s · BINARY 0.66s</text>
+<rect x="70" y="592" width="10" height="16" fill="#22d3ee" opacity="0.9"/>
+</svg>

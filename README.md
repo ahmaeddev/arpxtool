@@ -1,8 +1,16 @@
 # ARPXTOOL
 
-**Android reverse-engineering toolkit for Termux — decompile, inspect, patch, repack and sign APK files without root and without Frida.**
+<p align="center">
+  <img src="assets/banner.svg" alt="ARPXTOOL" width="100%">
+</p>
 
-`v55.0 · GATEKEEPER` · Python 3.12 · Termux · no root
+<p align="center">
+  <b>Android reverse-engineering toolkit for Termux — decompile, inspect, patch, repack and sign APK files without root and without Frida.</b>
+</p>
+
+<p align="center">
+  <code>v55.0 · GATEKEEPER</code> · <code>python 3.12</code> · <code>termux</code> · <code>no root</code>
+</p>
 
 ---
 
@@ -16,6 +24,10 @@ three. Most tools solve one of them and claim the rest.
 ARPXTOOL solves all four in the APK itself, and then **re-opens the signed
 output to prove every patch is actually there**. It never prints a success
 marker for something it did not verify.
+
+<p align="center">
+  <img src="assets/terminal.svg" alt="real build output" width="92%">
+</p>
 
 ## What it does
 
@@ -66,7 +78,22 @@ Modes: `detect · fast · full · inspect · native · re · security · signatu
 Full numbers, the regression log of nine real defects, and what is still not
 covered: **[docs/TESTING.md](docs/TESTING.md)**
 
+## Pipeline
+
+<p align="center">
+  <img src="assets/architecture.svg" alt="pipeline" width="100%">
+</p>
+
+Every stage writes into the archive that gets signed — never into a tree that
+may be discarded. Deep dive, stage by stage, with the invariants each one
+protects: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
+
 ## Comparison with seven other tools
+
+<p align="center">
+  <img src="assets/comparison.svg" alt="comparison" width="88%">
+</p>
+
 
 NVISO · reFlutter · Flutter-Unpinner · ApkPatcher · objection · apk-mitf · Frida
 — scored across nine dimensions, with where each one beats this tool:
@@ -76,13 +103,14 @@ Short version: **41/50** for ARPXTOOL on no-root Flutter interception, ahead of
 reFlutter (37) and NVISO (31). It loses clearly on one thing — the Frida tools
 work on an app that is already installed, without repacking.
 
-## How it works
+## Documentation
 
-The engineering decisions, each written from the failure that produced it: the
-DEX length invariant, why the network config is edited instead of generated, the
-nibble-wildcard bug that disabled a signature, the dual build path that threw
-away edits, and the cross-device move that killed a finished build:
-**[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)**
+| File | What is inside |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | every stage, every invariant, the real function names |
+| [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) | the engineering log, written from the failures that produced each decision |
+| [docs/TESTING.md](docs/TESTING.md) | measured report: 36 engines, 9 fixed defects, real build timings |
+| [docs/COMPARISON.md](docs/COMPARISON.md) | seven tools scored across nine dimensions |
 
 ## Verify a Flutter engine yourself
 
@@ -106,11 +134,12 @@ python3 tests/test_cli.py app.apk    # adds the engine probe on a real apk
 ## Repository layout
 
 ```
-arpxtool_pro.py            the tool (obfuscated build)
-obfuscate.py               regenerates the obfuscated build from source
-verify_flutter_engines.py  standalone engine probe
+arpxtool.py                the tool — readable source, ~15k lines
+verify_flutter_engines.py  standalone engine probe (no imports from the tool)
 install.sh                 Termux installer
 tests/test_cli.py          cli-level test suite
+assets/                    banner, pipeline, comparison, terminal (SVG)
+docs/ARCHITECTURE.md       stage by stage, with invariants
 docs/HOW_IT_WORKS.md       engineering log
 docs/COMPARISON.md         seven-tool comparison with scores
 docs/TESTING.md            measured test report + regression log
@@ -118,9 +147,8 @@ docs/TESTING.md            measured test report + regression log
 
 ## Notes
 
-- `arpxtool_pro.py` is the distributed build: identifiers renamed, comments and
-  docstrings removed. Regenerate after editing with
-  `python3 obfuscate.py arpxtool.py arpxtool_pro.py`.
+- The shipped source is the readable one. No obfuscation: what the tool does is
+  in the code, and the docs explain why each part exists.
 - The tool refuses to sign a build it cannot verify.
 
 ## Disclaimer
