@@ -1,38 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="600" viewBox="0 0 1120 600" role="img" aria-label="comparison chart">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient><linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="18"/></filter></defs><rect width="1120" height="600" fill="#0b1017"/>
-<text x="60" y="56" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="20" fill="#c9d6e2" font-weight="700" text-anchor="start" >no-root flutter interception · score / 50</text>
-<text x="60" y="80" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#6b7f93" font-weight="400" text-anchor="start" >nine dimensions: root, dart coverage, engine coverage, return values, verification, automation, class retention, live app, dump</text>
+<text x="60" y="56" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="20" fill="#c9d6e2" font-weight="700" text-anchor="start" >no-root flutter interception · score / 45</text>
+<text x="60" y="80" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#6b7f93" font-weight="400" text-anchor="start" >nine dimensions: root · dart coverage · engine coverage · return values · verification · automation · class retention · live app · dump</text>
 <text x="60" y="143" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#c9d6e2" font-weight="600" text-anchor="start" >ARPXTOOL</text>
 <rect x="260" y="120" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="120" width="606" height="34" rx="8" fill="url(#bar)" opacity="1"/>
-<text x="880" y="143" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >41</text>
+<rect x="260" y="120" width="608" height="34" rx="8" fill="url(#bar)" opacity="1"/>
+<text x="882" y="143" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#22d3ee" font-weight="700" text-anchor="start" >37</text>
 <text x="60" y="197" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#c9d6e2" font-weight="600" text-anchor="start" >reFlutter</text>
 <rect x="260" y="174" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="174" width="547" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="821" y="197" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#a78bfa" font-weight="700" text-anchor="start" >37</text>
-<text x="60" y="251" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#c9d6e2" font-weight="600" text-anchor="start" >NVISO</text>
+<rect x="260" y="174" width="542" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="816" y="197" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#a78bfa" font-weight="700" text-anchor="start" >33</text>
+<text x="60" y="251" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >NVISO</text>
 <rect x="260" y="228" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="228" width="458" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="732" y="251" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >31</text>
-<text x="60" y="305" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#c9d6e2" font-weight="600" text-anchor="start" >Flutter-Unpinner</text>
+<rect x="260" y="228" width="476" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="750" y="251" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >29</text>
+<text x="60" y="305" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >Flutter-Unpinner</text>
 <rect x="260" y="282" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="282" width="458" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="732" y="305" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >31</text>
-<text x="60" y="359" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >Frida gadget</text>
+<rect x="260" y="282" width="460" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="734" y="305" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >28</text>
+<text x="60" y="359" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >Frida + gadget</text>
 <rect x="260" y="336" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="336" width="355" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="629" y="359" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >24</text>
+<rect x="260" y="336" width="427" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="701" y="359" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >26</text>
 <text x="60" y="413" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >ApkPatcher</text>
 <rect x="260" y="390" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="390" width="340" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="614" y="413" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >23</text>
+<rect x="260" y="390" width="328" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="602" y="413" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >20</text>
 <text x="60" y="467" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >objection</text>
 <rect x="260" y="444" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="444" width="325" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="599" y="467" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >22</text>
-<text x="60" y="521" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >apk-mitf</text>
+<rect x="260" y="444" width="312" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="586" y="467" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >19</text>
+<text x="60" y="521" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#6b7f93" font-weight="400" text-anchor="start" >apk-mitm</text>
 <rect x="260" y="498" width="740" height="34" rx="8" fill="#1e2b39" opacity="0.10"/>
-<rect x="260" y="498" width="310" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
-<text x="584" y="521" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >21</text>
+<rect x="260" y="498" width="279" height="34" rx="8" fill="url(#bar)" opacity="0.45"/>
+<text x="553" y="521" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" fill="#6b7f93" font-weight="700" text-anchor="start" >17</text>
 <text x="60" y="574" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#6b7f93" font-weight="400" text-anchor="start" >scores are relative to this problem, not to general features</text>
 </svg>

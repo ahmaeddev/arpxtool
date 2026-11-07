@@ -113,14 +113,14 @@ def architecture():
 
 def comparison():
     w, h = 1120, 600
-    rows = [("ARPXTOOL", 41, CYAN), ("reFlutter", 37, VIOLET), ("NVISO", 31, DIM),
-            ("Flutter-Unpinner", 31, DIM), ("Frida gadget", 24, DIM), ("ApkPatcher", 23, DIM),
-            ("objection", 22, DIM), ("apk-mitf", 21, DIM)]
+    rows = [("ARPXTOOL", 37, CYAN), ("reFlutter", 33, VIOLET), ("NVISO", 29, DIM),
+            ("Flutter-Unpinner", 28, DIM), ("Frida + gadget", 26, DIM), ("ApkPatcher", 20, DIM),
+            ("objection", 19, DIM), ("apk-mitm", 17, DIM)]
     s = head(w, h, "comparison chart")
-    s += text(60, 56, "no-root flutter interception · score / 50", 20, TXT, "700")
-    s += text(60, 80, "nine dimensions: root, dart coverage, engine coverage, return values, verification, automation, class retention, live app, dump", 11, DIM)
+    s += text(60, 56, "no-root flutter interception · score / 45", 20, TXT, "700")
+    s += text(60, 80, "nine dimensions: root · dart coverage · engine coverage · return values · verification · automation · class retention · live app · dump", 11, DIM)
     top, bh, gap = 120, 34, 20
-    maxv = 50
+    maxv = 45
     for i, (name, val, color) in enumerate(rows):
         y = top + i * (bh + gap)
         s += text(60, y + 23, name, 14, TXT if val > 30 else DIM, "600" if val > 30 else "400")

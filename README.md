@@ -1,7 +1,7 @@
 # ARPXTOOL
 
 <p align="center">
-  <img src="assets/banner.svg" alt="ARPXTOOL" width="100%">
+  <img src="assets/logo.png" alt="ARPXTOOL" width="100%">
 </p>
 
 <p align="center">
@@ -88,20 +88,22 @@ Every stage writes into the archive that gets signed — never into a tree that
 may be discarded. Deep dive, stage by stage, with the invariants each one
 protects: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
 
-## Comparison with seven other tools
+## Comparison with twelve well-known tools
 
 <p align="center">
   <img src="assets/comparison.svg" alt="comparison" width="88%">
 </p>
 
 
-NVISO · reFlutter · Flutter-Unpinner · ApkPatcher · objection · apk-mitf · Frida
-— scored across nine dimensions, with where each one beats this tool:
-**[docs/COMPARISON.md](docs/COMPARISON.md)**
+Frida · objection · RMS · apk-mitm · reFlutter · NVISO · Flutter-Unpinner ·
+ApkPatcher · apktool · jadx · MobSF · mitmproxy — grouped by what each one is
+actually for, then scored only on the job they share, with a capability matrix
+for the rest: **[docs/COMPARISON.md](docs/COMPARISON.md)**
 
-Short version: **41/50** for ARPXTOOL on no-root Flutter interception, ahead of
-reFlutter (37) and NVISO (31). It loses clearly on one thing — the Frida tools
-work on an app that is already installed, without repacking.
+Short version: **37/45** for ARPXTOOL on no-root Flutter interception, ahead of
+reFlutter (33), NVISO (29) and Flutter-Unpinner (28). It loses clearly on one
+thing — the Frida tools work on an app that is **already installed**, without
+repacking.
 
 ## Documentation
 
@@ -110,7 +112,7 @@ work on an app that is already installed, without repacking.
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | every stage, every invariant, the real function names |
 | [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) | the engineering log, written from the failures that produced each decision |
 | [docs/TESTING.md](docs/TESTING.md) | measured report: 36 engines, 9 fixed defects, real build timings |
-| [docs/COMPARISON.md](docs/COMPARISON.md) | seven tools scored across nine dimensions |
+| [docs/COMPARISON.md](docs/COMPARISON.md) | twelve tools: categories, scoped score, capability matrix |
 
 ## Verify a Flutter engine yourself
 
@@ -138,7 +140,7 @@ arpxtool.py                the tool — readable source, ~15k lines
 verify_flutter_engines.py  standalone engine probe (no imports from the tool)
 install.sh                 Termux installer
 tests/test_cli.py          cli-level test suite
-assets/                    banner, pipeline, comparison, terminal (SVG)
+assets/                    logo, pipeline, comparison, terminal
 docs/ARCHITECTURE.md       stage by stage, with invariants
 docs/HOW_IT_WORKS.md       engineering log
 docs/COMPARISON.md         seven-tool comparison with scores
