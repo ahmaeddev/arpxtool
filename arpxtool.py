@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ARPXTOOL — android reverse-engineering toolkit for termux
+# Copyright (C) 2026 Ahmaeddev <t.me/Ahmaed_dev1>
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.  It is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# You should have received a copy of the license with this program; if not, see
+# <https://www.gnu.org/licenses/>.
 import io
 import os
 import re
@@ -433,7 +444,7 @@ LOGO = [
     "█▀█ █▀▄ █▀▀   █▀█ █░▀█ █▀▄ █▀▄ █▄█ █ █▀▄",
 ]
 
-_R = (('7b22617070223a2241525058222c2276', '657273696f6e223a2235352e30222c22', '636f64656e616d65223a22474154454b', '4545504552222c22617574686f72223a', '2241686d616564646576222c22636861', '6e6e656c223a22742e6d652f41686d61', '65645f64657631222c227365616c223a', '22316366636334636630353936323964', '64643963653332373666333635393733', '64653633393764346430623830396333', '65653636646665323437396466376166', '36227d'))
+_R = ('7b22617070223a2241525058222c2276', '657273696f6e223a2235352e31222c22', '636f64656e616d65223a22474154454b', '4545504552222c22617574686f72223a', '2241686d616564646576222c22636861', '6e6e656c223a22742e6d652f41686d61', '65645f64657631222c227365616c223a', '22316366636334636630353936323964', '64396365333237366633363539373364', '65363339376434643062383039633365', '65363664666532343739646637616636', '227d')
 
 
 def _ident():
@@ -1325,6 +1336,15 @@ SIG_TRUE = (
     "isSignatureVerified", "verifySignatures",
 )
 SIG_FALSE = ("isTampered", "checkTampered", "isAppTampered", "isSignatureInvalid", "isModified")
+
+# RASP: every one of these answers "yes, something suspicious is present".
+# Returning false is what keeps the app running.
+RASP_FALSE = tuple(DETECT_NAMES) + (
+    "isPackageTampered", "isHooked", "checkHooked", "detectHook", "isXposed",
+    "checkXposed", "isEmulatorDetected", "hasSuBinary", "detectSu", "checkBusybox",
+    "isMockLocation", "isLocationMocked",
+)
+RASP_TRUE = ("isSecure", "isDeviceSecure", "isTrusted", "isSafe", "checkEnvironment")
 
 
 SMALI_GROUPS = {
@@ -3251,6 +3271,173 @@ def show_sdks(sdks):
         print("  " + T_DIM(BULLET) + " " + row)
 
 
+def elf_dynsym_names(data):
+    """Every symbol name in .dynsym/.symtab (exports and imports)."""
+    if len(data) < 52 or data[:4] != b"\x7fELF":
+        return set()
+    bits = 64 if data[4] == 2 else 32
+    end = "<" if data[5] == 1 else ">"
+    try:
+        if bits == 64:
+            e_shoff = struct.unpack_from(end + "Q", data, 0x28)[0]
+            e_shentsize = struct.unpack_from(end + "H", data, 0x3A)[0]
+            e_shnum = struct.unpack_from(end + "H", data, 0x3C)[0]
+        else:
+            e_shoff = struct.unpack_from(end + "I", data, 0x20)[0]
+            e_shentsize = struct.unpack_from(end + "H", data, 0x2E)[0]
+            e_shnum = struct.unpack_from(end + "H", data, 0x30)[0]
+    except Exception:
+        return set()
+    if not e_shoff or not e_shnum or e_shnum > 4096:
+        return set()
+    names = set()
+    for i in range(e_shnum):
+        b = e_shoff + i * e_shentsize
+        try:
+            sh_type = struct.unpack_from(end + "I", data, b + 4)[0]
+            if bits == 64:
+                sh_offset = struct.unpack_from(end + "Q", data, b + 0x18)[0]
+                sh_size = struct.unpack_from(end + "Q", data, b + 0x20)[0]
+                sh_link = struct.unpack_from(end + "I", data, b + 0x28)[0]
+                sh_entsize = struct.unpack_from(end + "Q", data, b + 0x38)[0]
+            else:
+                sh_offset = struct.unpack_from(end + "I", data, b + 0x10)[0]
+                sh_size = struct.unpack_from(end + "I", data, b + 0x14)[0]
+                sh_link = struct.unpack_from(end + "I", data, b + 0x18)[0]
+                sh_entsize = struct.unpack_from(end + "I", data, b + 0x24)[0]
+        except Exception:
+            continue
+        if sh_type not in (2, 11) or not sh_size:
+            continue
+        try:
+            sb = e_shoff + sh_link * e_shentsize
+            str_off = struct.unpack_from(end + ("Q" if bits == 64 else "I"),
+                                         data, sb + (0x18 if bits == 64 else 0x10))[0]
+        except Exception:
+            continue
+        ent = sh_entsize or (24 if bits == 64 else 16)
+        for k in range(min(sh_size // ent, 200000)):
+            q = sh_offset + k * ent
+            try:
+                st_name = struct.unpack_from(end + "I", data, q)[0]
+            except Exception:
+                break
+            if not st_name:
+                continue
+            e = data.find(b"\x00", str_off + st_name)
+            if e < 0:
+                continue
+            names.add(data[str_off + st_name:e].decode("ascii", "ignore"))
+    return names
+
+
+def dex_native_census(data):
+    """Count methods, native methods and the classes that carry them.
+
+    A dex2c / VMP protected build keeps the method name and signature but sets
+    ACC_NATIVE and drops the code item: the body lives in a .so.
+    """
+    idx = DexIndex(data)
+    if not idx.ok:
+        return None
+    total = native = 0
+    by_class = {}
+    for i in range(min(idx.c_n, 60000)):
+        cbase = idx.c_off + i * 32
+        cdata = u4(data, cbase + 24)
+        if not cdata:
+            continue
+        p = cdata
+        try:
+            sf, p = uleb(data, p)
+            inf, p = uleb(data, p)
+            dm, p = uleb(data, p)
+            vm, p = uleb(data, p)
+            for _ in range(sf + inf):
+                _, p = uleb(data, p)
+                _, p = uleb(data, p)
+            for count in (dm, vm):
+                midx = 0
+                for _ in range(count):
+                    diff, p = uleb(data, p)
+                    midx += diff
+                    flags, p = uleb(data, p)
+                    code_off, p = uleb(data, p)
+                    total += 1
+                    if flags & 0x0100:          # ACC_NATIVE
+                        native += 1
+                        if len(by_class) < 60:
+                            desc = idx.type_name(u4(data, cbase))
+                            by_class[desc] = by_class.get(desc, 0) + 1
+        except Exception:
+            continue
+    return {"classes": min(idx.c_n, 60000), "methods": total, "native": native, "by_class": by_class}
+
+
+def protection_posture(apk):
+    """Static verdict on dex2c / VMP style protection, with what can be seen."""
+    out = {"methods": 0, "native": 0, "classes": 0, "by_class": {}, "libs": [],
+           "jni_static": 0, "jni_dynamic": False, "verdict": "none"}
+    try:
+        with zipfile.ZipFile(apk) as z:
+            for name in z.namelist():
+                if re.match(r"classes\d*\.dex$", name):
+                    c = dex_native_census(z.read(name))
+                    if c:
+                        out["methods"] += c["methods"]
+                        out["native"] += c["native"]
+                        out["classes"] += c["classes"]
+                        for k, v in c["by_class"].items():
+                            out["by_class"][k] = out["by_class"].get(k, 0) + v
+                elif re.match(r"lib/[^/]+/[^/]+\.so$", name):
+                    try:
+                        syms = elf_dynsym_names(z.read(name))
+                    except Exception:
+                        continue
+                    java_syms = sum(1 for x in syms if x.startswith("Java_"))
+                    dynamic = "RegisterNatives" in syms or "JNI_OnLoad" in syms
+                    if java_syms or dynamic:
+                        out["libs"].append((name, java_syms, dynamic, len(syms)))
+                    out["jni_static"] += java_syms
+                    out["jni_dynamic"] = out["jni_dynamic"] or dynamic
+    except Exception:
+        return out
+    if out["native"] == 0:
+        out["verdict"] = "none"
+    elif out["jni_static"] >= max(5, out["native"] // 2):
+        out["verdict"] = "dex2c"
+    elif out["jni_dynamic"]:
+        out["verdict"] = "dynamic"
+    else:
+        out["verdict"] = "native"
+    return out
+
+
+def show_protection(apk):
+    pos = protection_posture(apk)
+    Out.head("native protection", G_WARM)
+    if not pos["methods"]:
+        Out.info("no readable dex payload · protection verdict skipped")
+        return pos
+    pct = 100.0 * pos["native"] / max(pos["methods"], 1)
+    Out.kv("methods", "%d total · %d native (%.1f%%)" % (pos["methods"], pos["native"], pct))
+    if pos["verdict"] == "none":
+        Out.ok("no native method protection · every method has a code item")
+        return pos
+    verdict = {"dex2c": "dex2c-style · methods exported as Java_* in a library",
+               "dynamic": "dynamic JNI registration · JNI_OnLoad + RegisterNatives",
+               "native": "native methods without a visible JNI export"}.get(pos["verdict"], "?")
+    Out.warn(verdict)
+    if pos["libs"]:
+        for name, java_syms, dynamic, total in sorted(pos["libs"], key=lambda x: -x[1])[:4]:
+            Out.bullet("%s · %d Java_* · %s · %d symbols"
+                       % (name, java_syms, "dynamic" if dynamic else "static", total))
+    for desc, n in sorted(pos["by_class"].items(), key=lambda kv: -kv[1])[:6]:
+        Out.bullet("%s · %d native method(s)" % (desc.strip("L;").split("/")[-1], n))
+    Out.info("a patched method with ACC_NATIVE has no bytecode here — the body is in the .so")
+    return pos
+
+
 def show_protections(prots):
     Out.head("hardening & packers", G_WARM)
     if not prots:
@@ -3546,6 +3733,10 @@ def run_pipeline(args):
     show_sdks(inventory_sdks(src))
     prots = detect_protections(src, libs, manifest)
     show_protections(prots)
+    try:
+        pipe.protection = show_protection(merged)
+    except Exception as _e:
+        pipe.protection = {}
     libapp = next((p for _, _, p in libs if p.name == "libapp.so"), None)
     if libapp:
         show_features(analyze_engine_strings(libapp))
@@ -3645,6 +3836,7 @@ def run_pipeline(args):
         if plan["smali"] or args.mode in ("ssl", "full", "re"):
             show_ssl_surface(merged)
             show_host_issuers(merged)
+            show_pinning(merged)
             show_store_bypass(merged)
     except Exception as e:
         Out.warn("tls surface scan skipped · " + trunc(str(e), 50))
@@ -4929,9 +5121,82 @@ def run_surgery_mode(args):
     digest = sha256_file(final)
     seal("artifact", [str(final), "size      " + human(st["size"]), "sha256    " + digest[:40], "strategy  " + str(tag)], G_OK)
     Out.kv("sha256", digest)
+    if getattr(args, "report", False) or getattr(args, "report_bundle", False):
+        write_build_report(pipe, final, args, {"verify": verify_state if "verify_state" in dir() else None})
     return 0
 
 
+
+
+def write_build_report(pipe, final, args, extra=None):
+    """JSON + markdown + zip next to the output, ready to be sent as is."""
+    try:
+        final = Path(final)
+        stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        data = {
+            "tool": APP, "version": VERSION, "stamp": stamp,
+            "mode": getattr(args, "mode", "?"), "strategy": getattr(args, "strategy", "auto"),
+            "input": {"path": str(getattr(args, "input", "")), "sha256": pipe.src_hash},
+            "output": {"path": str(final), "size": final.stat().st_size if final.exists() else 0,
+                       "sha256": sha256_file(final) if final.exists() else ""},
+            "decode": {"classes_lost": getattr(pipe, "decode_skips", 0),
+                       "engine": pipe.tool.get("apktool")},
+            "protection": getattr(pipe, "protection", {}),
+            "patches": getattr(pipe, "records", []),
+            "dex_guard": {"rejected": DEX_GUARD.get("rejected", []),
+                          "native_targets": DEX_GUARD.get("native_targets", [])},
+            "stages": [{"name": n, "seconds": round(d, 2)} for n, d in Stage.records],
+        }
+        if extra:
+            data.update(extra)
+        data["protection"].pop("by_class", None) if isinstance(data.get("protection"), dict) else None
+        out_dir = final.parent if final.parent.exists() else Path(".")
+        js = out_dir / (final.stem + ".report.json")
+        md = out_dir / (final.stem + ".report.md")
+        atomic_write(js, json.dumps(data, indent=2, default=str), "w")
+        rows = ["# ARPXTOOL build report", "",
+                "| field | value |", "|---|---|",
+                "| tool | %s %s |" % (APP, VERSION),
+                "| stamp | %s |" % stamp,
+                "| mode | %s |" % data["mode"],
+                "| input | `%s` |" % Path(str(data["input"]["path"])).name,
+                "| input sha256 | `%s` |" % (data["input"]["sha256"] or "")[:32],
+                "| output | `%s` |" % final.name,
+                "| output sha256 | `%s` |" % (data["output"]["sha256"] or "")[:32],
+                "| size | %s |" % human(data["output"]["size"]),
+                "| classes lost at decode | %d |" % data["decode"]["classes_lost"], ""]
+        prot = data.get("protection") or {}
+        if prot.get("methods"):
+            rows += ["## protection", "",
+                     "| field | value |", "|---|---|",
+                     "| methods | %d |" % prot.get("methods", 0),
+                     "| native | %d |" % prot.get("native", 0),
+                     "| verdict | %s |" % prot.get("verdict", "?"), ""]
+        if data["patches"]:
+            rows += ["## patches", "", "| file | offset | arch | kind | returns | function |",
+                     "|---|---|---|---|---|---|"]
+            for r in data["patches"]:
+                rows.append("| `%s` | %s | %s | %s | %s | %s |"
+                            % (r.get("file"), r.get("offset"), r.get("arch"), r.get("kind"),
+                               r.get("ret"), r.get("fn", "")))
+            rows.append("")
+        if data["stages"]:
+            rows += ["## stages", "", "| stage | seconds |", "|---|---|"]
+            rows += ["| %s | %.2f |" % (x["name"], x["seconds"]) for x in data["stages"]]
+        atomic_write(md, "\n".join(rows) + "\n", "w")
+        zip_path = out_dir / (final.stem + ".report.zip")
+        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+            z.write(js, js.name)
+            z.write(md, md.name)
+            log = (LOG or {}).get("path")
+            if log and Path(log).exists():
+                z.write(str(log), Path(log).name)
+        Out.ok("report · %s" % zip_path.name)
+        Out.info("send this file as is: %s" % zip_path)
+        return zip_path
+    except Exception as e:
+        Out.warn("report not written · " + trunc(str(e), 60))
+        return None
 
 
 def dashboard():
@@ -5987,6 +6252,25 @@ class DexIndex:
             return "zero"
         return "null"
 
+    def class_map(self):
+        """{descriptor: class_def offset} built once.
+
+        find_class() is a linear scan; calling it per target turned a 7-dex
+        banking app into a hang (119 targets x 400k classes x 7 files).
+        """
+        cached = getattr(self, "_cmap", None)
+        if cached is not None:
+            return cached
+        out = {}
+        for i in range(min(self.c_n, 400000)):
+            cbase = self.c_off + i * 32
+            try:
+                out[self.type_name(u4(self.d, cbase))] = cbase
+            except Exception:
+                continue
+        self._cmap = out
+        return out
+
     def find_class(self, desc):
         limit = min(self.c_n, 400000)
         for i in range(limit):
@@ -6399,8 +6683,9 @@ def dex_surgery(data, targets):
         return bytearray(data), []
     buf = bytearray(data)
     hits = []
+    cmap = idx.class_map()
     for desc, method, kind in targets:
-        cbase = idx.find_class(desc)
+        cbase = cmap.get(desc)
         if cbase is None:
             continue
         cdata = u4(buf, cbase + 24)
@@ -6426,6 +6711,9 @@ def dex_surgery(data, targets):
                     _, p = uleb(buf, p)
                     code_off, p = uleb(buf, p)
                     if not code_off:
+                        if idx.method_name(midx) == method:
+                            DEX_GUARD.setdefault("native_targets", []).append(
+                                (desc, method))
                         continue
                     if idx.method_name(midx) != method:
                         continue
@@ -6526,9 +6814,11 @@ def dex_surgery_apk(apk, out, targets, name_map=None):
     try:
         with zipfile.ZipFile(apk) as zin:
             plan = {}
-            for name in zin.namelist():
-                if not re.match(r"classes\d*\.dex$", name):
-                    continue
+            dex_names = [n for n in zin.namelist() if re.match(r"classes\d*\.dex$", n)]
+            Out.info("%d dex file(s) · %d class target(s) · %d name target(s)"
+                     % (len(dex_names), len(targets), len(name_map or {})))
+            for _i, name in enumerate(dex_names, 1):
+                _t0 = time.time()
                 data = zin.read(name)
                 buf, hits = dex_surgery(data, targets)
                 if name_map:
@@ -6549,10 +6839,17 @@ def dex_surgery_apk(apk, out, targets, name_map=None):
                     else:
                         plan[name] = bytes(buf)
                         changed.extend((name,) + h for h in hits)
+                Out.info("dex %d/%d · %s · %d hit(s) · %.1fs"
+                         % (_i, len(dex_names), name, len(hits), time.time() - _t0))
             if not plan:
                 return False, changed
+            items = zin.infolist()
+            Out.info("repacking %d entries · %.1f MB"
+                     % (len(items), Path(apk).stat().st_size / 1048576.0))
             with zipfile.ZipFile(out, "w") as zout:
-                for item in zin.infolist():
+                for _n, item in enumerate(items, 1):
+                    if _n % 2000 == 0:
+                        Out.info("packed %d/%d entries" % (_n, len(items)))
                     if item.filename.upper().startswith("META-INF/") and item.filename.upper().endswith((".SF", ".RSA", ".DSA", ".EC", ".MF")):
                         continue
                     payload = plan.get(item.filename)
@@ -6930,6 +7227,11 @@ def surgery_pipeline(pipe, merged, final, args):
     sigmap.update(SSL_NAME_TARGETS)
     if getattr(args, "mode", "") in ("signature", "full", "ssl") or getattr(args, "remove_license", False):
         sigmap.update(LVL_NAME_TARGETS)
+    if getattr(args, "mode", "") in ("security", "full", "signature", "ssl") or \
+            getattr(args, "bypass_protection", False):
+        sigmap.update({n: "false" for n in RASP_FALSE})
+        sigmap.update({n: "true" for n in RASP_TRUE})
+        Out.info("rasp targets armed · root, emulator, frida, debugger and tamper checks return false")
     if getattr(args, "targets", None):
         extra_cls, extra_names, problems = load_targets(args.targets)
         for prob in problems:
@@ -7002,6 +7304,13 @@ def surgery_pipeline(pipe, merged, final, args):
             Out.info("%s · engine already patched" % _so)
         elif getattr(_res, "error", None):
             Out.warn("%s · %s" % (_so, _res.error))
+    native_hits = DEX_GUARD.get("native_targets") or []
+    if native_hits:
+        Out.warn("%d target method(s) are native · the body lives in a .so, not in the dex"
+                 % len(native_hits))
+        for desc, meth in native_hits[:6]:
+            Out.bullet("%s · %s" % (desc.strip("L;").split("/")[-1], meth))
+        Out.info("patching those needs native analysis (symbols, RegisterNatives), not dex surgery")
     for name, why in DEX_GUARD.get("rejected", []):
         Out.bad("%s would not load after patching · kept the original bytes" % name)
         Out.info("  " + why)
@@ -7253,6 +7562,99 @@ SYSTEM_STORE_MARKERS = frozenset((
     "/system/etc/security/cacerts", "/system/etc/security/cacerts/",
     "AndroidCAStore", "cacerts", "/apex/com.android.conscrypt/cacerts",
 ))
+
+
+PIN_VALUE_RX = re.compile(r"^sha256/[A-Za-z0-9+/=]{16,}$")
+
+
+def dex_pin_map(data, cap=200000):
+    """{class: (hosts, pin values)} for every class holding a certificate pin.
+
+    OkHttp pins are plain strings — 'sha256/<base64 spki>' added next to the
+    host it belongs to. Finding them statically tells you exactly which domains
+    will refuse your proxy and with which key, before you touch the app.
+    """
+    idx = DexIndex(data)
+    if not idx.ok:
+        return {}
+    out = {}
+    for i in range(min(idx.c_n, 60000)):
+        cbase = idx.c_off + i * 32
+        cdata = u4(data, cbase + 24)
+        if not cdata:
+            continue
+        p = cdata
+        try:
+            sf, p = uleb(data, p)
+            inf, p = uleb(data, p)
+            dm, p = uleb(data, p)
+            vm, p = uleb(data, p)
+            for _ in range(sf + inf):
+                _, p = uleb(data, p)
+                _, p = uleb(data, p)
+        except Exception:
+            continue
+        pins, hosts = [], []
+        try:
+            for count in (dm, vm):
+                midx = 0
+                for _ in range(count):
+                    diff, p = uleb(data, p)
+                    midx += diff
+                    _, p = uleb(data, p)
+                    code_off, p = uleb(data, p)
+                    if not code_off:
+                        continue
+                    n = min(u4(data, code_off + 12), cap)
+                    base = code_off + 16
+                    for k in range(n - 1):
+                        unit = u2(data, base + k * 2)
+                        op = unit & 0xFF
+                        if op not in (0x1A, 0x1B):
+                            continue
+                        if op == 0x1A:
+                            sidx = u2(data, base + (k + 1) * 2)
+                        else:
+                            if k + 2 >= n:
+                                continue
+                            sidx = u2(data, base + (k + 1) * 2) | (u2(data, base + (k + 2) * 2) << 16)
+                        val = idx.string(sidx)
+                        if not val or len(val) > 120:
+                            continue
+                        if PIN_VALUE_RX.match(val):
+                            pins.append(val)
+                        elif HOST_RX.match(val) and HOST_TLD_RX.search(val):
+                            hosts.append(val)
+        except Exception:
+            pass
+        if pins:
+            desc = idx.type_name(u4(data, cbase))
+            out[desc] = (sorted(set(hosts))[:4], sorted(set(pins))[:6])
+    return out
+
+
+def show_pinning(apk, limit=10):
+    pins = {}
+    try:
+        with zipfile.ZipFile(apk) as z:
+            for name in sorted(n for n in z.namelist() if re.match(r"classes\d*\.dex$", n)):
+                for desc, (hosts, values) in dex_pin_map(z.read(name)).items():
+                    for h in hosts or ["(no host string in class)"]:
+                        entry = pins.setdefault(h, {"classes": set(), "pins": set()})
+                        entry["classes"].add(desc)
+                        entry["pins"].update(values)
+    except Exception:
+        return
+    Out.head("certificate pins", G_WARM)
+    if not pins:
+        Out.ok("no okhttp pin strings in the payload · nothing pins a key here")
+        return
+    for host in sorted(pins, key=lambda h: -len(pins[h]["pins"]))[:limit]:
+        entry = pins[host]
+        cls = sorted(c.strip("L;").split("/")[-1] for c in entry["classes"])[:2]
+        Out.bullet("%-34s %d pin(s) · %s" % (trunc(host, 34), len(entry["pins"]), ", ".join(cls)))
+        for pin in sorted(entry["pins"])[:2]:
+            Out.info("   " + trunc(pin, 60))
 
 
 def show_store_bypass(apk, limit=10):
@@ -7615,6 +8017,9 @@ def dex_surgery_by_name(data, wanted):
                     _, p = uleb(buf, p)
                     code_off, p = uleb(buf, p)
                     if not code_off:
+                        if idx.method_name(midx) in wanted:
+                            DEX_GUARD.setdefault("native_targets", []).append(
+                                (desc, idx.method_name(midx)))
                         continue
                     name = idx.method_name(midx)
                     kind = wanted.get(name)
@@ -10035,6 +10440,7 @@ REFERENCE_FLAGS = [
     ("--engine VERSION", "force an apktool version"),
     ("--flutter-engine SO", "drop-in libflutter.so (prebuilt patched engine)"),
     ("--remove-license", "neutralise play store licence checks"),
+    ("--report-bundle", "write a sendable report zip next to the output"),
     ("--max-engines N", "how many engines to try"),
     ("--resume DIR", "rebuild from a preserved tree"),
     ("--baseline APK", "earlier build to diff against"),
@@ -15375,6 +15781,8 @@ def build_parser():
     ap.add_argument("--engine", help="force an apktool version, e.g. 2.12.1")
     ap.add_argument("--flutter-engine", help="drop-in libflutter.so (e.g. reFlutter's patched build)")
     ap.add_argument("--remove-license", action="store_true", help="neutralise Play Store licence checks (LVL / PairIP)")
+    ap.add_argument("--report-bundle", action="store_true", help="write a sendable report zip (json + md + log) next to the output")
+    ap.add_argument("--bypass-protection", action="store_true", help="neutralise root/emulator/frida/debugger/tamper checks (RASP)")
     ap.add_argument("--resume", help="rebuild from a preserved work tree")
     ap.add_argument("--doctor", action="store_true", help="diagnose the host and the toolchain")
     ap.add_argument("--clean", action="store_true", help="purge stale work trees and reclaim space")

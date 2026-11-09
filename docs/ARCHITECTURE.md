@@ -171,6 +171,43 @@ the tree copy dies on the surgery path.
 
 ---
 
+## 5b. Protection analysis — dex2c and VMP
+
+`dex2c` (and VMP packers) keep the method name and signature but flip
+`ACC_NATIVE` (0x0100) and drop the code item: the body is compiled into a `.so`.
+That is the one case where dex surgery cannot help, and the tool says so instead
+of silently skipping the target.
+
+`dex_native_census()` walks the class data of every dex and counts methods vs.
+native methods per class. `protection_posture()` adds the JNI side by reading
+`.dynsym` of every library:
+
+| what is seen | verdict |
+|---|---|
+| no `ACC_NATIVE` methods | `none` — everything has a code item |
+| many `Java_*` exports in a library | `dex2c` — static JNI registration, one C function per method |
+| `JNI_OnLoad` + `RegisterNatives`, no `Java_*` exports | `dynamic` — registration at runtime, typical of VMP or obfuscated dex2c |
+| native methods, no visible JNI export | `native` — the registration is hidden |
+
+Static analysis cannot separate VMP from a well-obfuscated dex2c — both register
+native methods at runtime. The tool reports what it can see and never claims
+more. During surgery, every target that turned out to be `ACC_NATIVE` is listed
+under `native target(s)` with the note that the body lives in the `.so`.
+
+## 5c. RASP bypass and the pin map
+
+`RASP_FALSE` holds 45 method names that all answer *"something suspicious is
+present"* — `isRooted`, `isEmulator`, `isFridaDetected`, `isDebuggerConnected`,
+`isTampered`, and the many spellings each library invents. Each one is patched
+with a stub that returns **false**, and `RASP_TRUE` (`isSecure`, `isTrusted`, …)
+returns true. The stub is chosen from the method's own return type, so a
+`boolean` check and an `int` check both stay verifiable.
+
+`dex_pin_map()` walks every class looking for `const-string` values that match
+`sha256/<base64>` and the host strings sitting in the same class. The result is
+the honest answer to *"why will this domain refuse my proxy"* — the pin and the
+class that declares it — without running the app.
+
 ## 6. Build and sign
 
 - `do_zipalign()` aligns to 4 bytes; the aligned file is moved with
@@ -192,6 +229,11 @@ the tree copy dies on the surgery path.
 
 `show_install_check()` prints `unavailable` for anything it could not read and
 never a tick it did not verify.
+
+`write_build_report()` writes three files next to the output when
+`--report-bundle` is set: `<name>.report.json` (machine readable),
+`<name>.report.md` (what a human reads) and `<name>.report.zip` containing both
+plus the session log — one file to attach when reporting a problem.
 
 ---
 

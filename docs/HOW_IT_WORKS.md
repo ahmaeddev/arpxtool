@@ -132,7 +132,7 @@ patch.
 ## Verification
 
 ```bash
-python3 arpxtool_pro.py --self-check      # 34 checks
+python3 arpxtool.py --self-check      # 34 checks
 ```
 
 A success marker is only printed for something that was actually verified. When

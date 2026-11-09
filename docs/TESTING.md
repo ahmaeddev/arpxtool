@@ -21,6 +21,7 @@ Termux · **no root** · no Frida server.
 | 7 | Build died at the last step: `[Errno 18] Cross-device link` | `os.replace()` from `$TMPDIR` to `/storage/emulated/0` | copy + unlink fallback |
 | 8 | Manifest fields showed `?` in install diagnosis | aapt2 stores attribute names as resource ids | resource map parsed, attributes matched by id |
 | 9 | `host issuers` listed `java.vendor` as a host | regex accepted any dotted lowercase string | two dots + real TLD required |
+| 10 | tool appeared frozen on a 169 MB, 7-dex banking app | `find_class()` is a linear scan, called once per target: 119 targets × 400k classes × 7 dex | `class_map()` built once per dex — **48× faster** (measured), plus progress lines per dex and per 2000 packed entries |
 
 ---
 
@@ -40,7 +41,7 @@ NVISO's `libflutter_samples`, run against the signature table.
 | Stub written on arm64 | `00 00 80 d2 c0 03 5f d6` |
 | Second run on a patched engine | reports exactly one `already patched` |
 
-Cross-checks: NVISO's own `verify.py` reports 50 OK / 0 NOK on the same corpus
+Cross-checks: NVISO's own verifier (`libflutter_samples/verify.py` in their repo) reports 50 OK / 0 NOK on the same corpus
 and treats more than one match per file as a failure — the table here obeys the
 same rule.
 
@@ -54,24 +55,29 @@ automatic prebuilt-engine path exists for.
 ## 3. Unit and structural tests
 
 ```
-test_dex_integrity.py   ALL PASS
-test_netsec.py          ALL PASS
-test_flutter_patch.py   ALL PASS
+tests/test_dex_integrity.py   ALL PASS
+tests/test_netsec.py          ALL PASS
+tests/test_flutter_patch.py   ALL PASS
+tests/test_cli.py             ALL PASS
 arpxtool --self-check   34 / 34
 ```
 
-`test_dex_integrity.py` covers: the length invariant, `code_item` alignment
+`tests/test_dex_integrity.py` covers: the length invariant, `code_item` alignment
 rules (an odd `insns_size` with no tries legitimately ends at 2 mod 4), stub
 acceptance vs. a drifted stream, the structural audit on a broken archive, the
 stub chosen from the method's return type (`V`, `Z`, `Ljava/util/List;`, `J`),
 and host attribution from `const-string`.
 
-`test_netsec.py` covers: the clone of `<certificates>`, the `user` anchor added,
+`tests/test_netsec.py` covers: the clone of `<certificates>`, the `user` anchor added,
 `overridePins="true"` present, `cleartextTrafficPermitted` forced on, `pin-set`
 and `domain-config` removed, and an archive with no config reported honestly as
 `absent`.
 
-`test_flutter_patch.py` covers: pattern compilation with nibble wildcards, one
+`tests/test_dex_integrity.py` also covers the native protection census: a synthetic
+dex with `ACC_NATIVE` methods is counted correctly, the class is named, and a
+clean dex reports zero.
+
+`tests/test_flutter_patch.py` covers: pattern compilation with nibble wildcards, one
 site per engine, the correct return value per function, patching an engine
 inside an archive (4 bytes changed, size preserved, second pass sees it as
 already patched), and symbol-table lookup on an unstripped engine.
